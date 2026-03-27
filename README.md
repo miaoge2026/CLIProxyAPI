@@ -77,7 +77,7 @@
 
 ```bash
 # 使用 wget
-wget https://raw.githubusercontent.com/router-for-me/CLIProxyAPI/main/cli-proxy.sh
+wget [https://raw.githubusercontent.com/router-for-me/CLIProxyAPI/main/cli-proxy.sh](https://github.com/router-for-me/CLIProxyAPI.git)
 
 # 或使用 curl
 curl -O https://raw.githubusercontent.com/router-for-me/CLIProxyAPI/main/cli-proxy.sh
