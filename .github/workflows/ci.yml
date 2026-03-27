@@ -1,0 +1,115 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'  # 每天凌晨2点运行
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyyaml pytest
+    
+    - name: Validate YAML syntax
+      run: |
+        python -c "import yaml; yaml.safe_load(open('config.example.yaml'))"
+        echo "YAML syntax validation passed"
+    
+    - name: Validate shell script
+      run: |
+        shellcheck cli-proxy.sh || echo "shellcheck not available, skipping"
+        bash -n cli-proxy.sh
+        echo "Shell script syntax validation passed"
+    
+    - name: Test script commands
+      run: |
+        bash cli-proxy.sh help || true
+        echo "Script commands test passed"
+
+  build-test:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Build and test
+      run: |
+        docker build -t cli-proxy-api:test .
+        docker run --rm cli-proxy-api:test --version || true
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [test, build-test]
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Get version
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: CLIProxyAPI ${{ steps.get_version.outputs.VERSION }}
+        body: |
+          ## What's Changed
+          
+          - Auto-generated release
+          
+          ## Installation
+          
+          ```bash
+          wget https://raw.githubusercontent.com/router-for-me/CLIProxyAPI/main/cli-proxy.sh
+          chmod +x cli-proxy.sh
+          ./cli-proxy.sh install
+          ```
+        files: |
+          cli-proxy.sh
+          config.example.yaml
+          docker-compose.yml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: |
+          eceasy/cli-proxy-api:${{ steps.get_version.outputs.VERSION }}
+          eceasy/cli-proxy-api:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max

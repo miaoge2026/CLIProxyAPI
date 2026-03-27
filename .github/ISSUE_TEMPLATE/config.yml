@@ -1,0 +1,43 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 文档
+    url: https://github.com/router-for-me/CLIProxyAPI/wiki
+    about: 查看完整的用户指南和 API 文档
+  - name: 💬 讨论区
+    url: https://github.com/router-for-me/CLIProxyAPI/discussions
+    about: 在讨论区提问、分享想法
+  - name: 🔍 Stack Overflow
+    url: https://stackoverflow.com/questions/tagged/cli-proxy-api
+    about: 使用 cli-proxy-api 标签提问
+  - name: 📧 邮件支持
+    url: mailto:support@cli-proxy-api.com
+    about: 获取商业支持
+
+# 问题模板选择器配置
+# 当用户创建新 issue 时显示的模板选择器
+template_selector:
+  - type: bug_report
+    name: 🐛 Bug 报告
+    description: 报告一个错误或问题
+  - type: feature_request
+    name: ✨ 功能请求
+    description: 建议新功能或改进
+  - type: documentation
+    name: 📚 文档问题
+    description: 报告文档问题或改进建议
+  - type: question
+    name: ❓ 问题
+    description: 询问如何使用或配置
+  - type: custom
+    name: 📝 其他问题
+    description: 其他类型的问题
+
+# 自动分配配置
+# 根据标签自动分配负责人
+auto_assign:
+  - label: 'bug'
+    assignees: ['maintainer']
+  - label: 'documentation'
+    assignees: ['docs-team']
+  - label: 'enhancement'
+    assignees: ['dev-team']
