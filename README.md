@@ -24,9 +24,9 @@
 ### 1. 下载脚本
 
 ```bash
-wget https://raw.githubusercontent.com/router-for-me/CLIProxyAPI/main/cli-proxy.sh
+wget https://raw.githubusercontent.com/miaoge2026/CLIProxyAPI/main/cli-proxy.sh
 # 或
-curl -O https://raw.githubusercontent.com/router-for-me/CLIProxyAPI/main/cli-proxy.sh
+curl -O https://raw.githubusercontent.com/miaoge2026/CLIProxyAPI/main/cli-proxy.sh
 ```
 
 ### 2. 赋予执行权限
@@ -217,9 +217,9 @@ MIT License
 
 ## 链接
 
-- [项目主页](https://github.com/router-for-me/CLIProxyAPI)
+- [项目主页](https://github.com/miaoge2026/CLIProxyAPI)
 - [Docker Hub](https://hub.docker.com/r/eceasy/cli-proxy-api)
-- [问题反馈](https://github.com/router-for-me/CLIProxyAPI/issues)
+- [问题反馈](https://github.com/miaoge2026/CLIProxyAPI/issues)
 
 ## 更新日志
 
